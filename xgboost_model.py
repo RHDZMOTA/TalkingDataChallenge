@@ -28,9 +28,9 @@ def main():
     print(config)
     model = train_model(data["dtrain"], config)
     gc.collect()
-    dsubmit, results = get_submit_data()
-    results["is_attributed"] = model.predict(dsubmit, ntree_limit=model.best_ntree_limit)
-    results.to_csv("xgb_sub.csv", float_format="%0.8f", index=None)
+    #dsubmit, results = get_submit_data()
+    #results["is_attributed"] = model.predict(dsubmit, ntree_limit=model.best_ntree_limit)
+    #results.to_csv("xgb_sub.csv", float_format="%0.8f", index=None)
 
 
 def get_config():
