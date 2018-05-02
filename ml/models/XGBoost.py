@@ -9,6 +9,7 @@ from sklearn.metrics import roc_auc_score
 TRAIN_COLS = ["ip", "app", "device", "os", "channel" , "click_time", "is_attributed"]
 TEST_COLS = ["ip", "app", "device", "os", "channel" , "click_time", "click_id"]
 PREDICTION_COL = "is_attributed"
+TRAIN_LARGE_FILE_PERCENTAGE = 0.1
 
 DTYPES = {
     "ip": "uint32",
@@ -63,7 +64,7 @@ def read_large_file(data_path):
     df = pd.DataFrame([])
     chunks = pd.read_csv(data_path, usecols=TRAIN_COLS, dtype=DTYPES, chunksize=10**7)
     for chunk in chunks:
-        temp = chunk.sample(frac=0.05)
+        temp = chunk.sample(frac=TRAIN_LARGE_FILE_PERCENTAGE)
         df = df.append(temp)
         del temp
     gc.collect()

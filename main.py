@@ -64,6 +64,7 @@ if __name__ == "__main__":
     parser.add_option("--model", type="string", help="ML Model")
     parser.add_option("--iter", type="string", help="Number of iterations (config option must not be provided.")
     parser.add_option("--config", type="string", help="Configuration file for model (iter option must not be provided).")
+    # parser.add_options("--submit", action="store_true", help="Create submission files.")
     kwargs, _ = parser.parse_args(args=None, values=None)
 
     check_options(kwargs)
