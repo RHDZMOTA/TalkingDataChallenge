@@ -3,10 +3,10 @@
 This is my participation in the Kaggle Competition: [TalkingData AdTracking Fraud Detection Challenge
 ](https://www.kaggle.com/c/talkingdata-adtracking-fraud-detection). 
 
-**Tech Stack**
+**Requirements**
 * Python 3.x
-* PySpark
-* XGBoost
+* Spark
+* Kaggle CLI
 
 ## First-time setup
 
@@ -18,7 +18,7 @@ To run this repo, follow these steps:
     * `virtualenv --python=python3 venv`
     * `source venv/bin/activate`
 4. Install requirements: `pip install -r requirements.txt`
-5. Run the setup script: `python setup.py`
+5. Run the setup script: `bash setup.sh`
 
 ## Usage
 
