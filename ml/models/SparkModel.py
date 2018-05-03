@@ -9,6 +9,8 @@ from pyspark.sql.types import IntegerType
 from pyspark.sql.functions import udf
 from pyspark.sql import SparkSession
 
+from util.spark import collect_submit
+
 LABEL_COL = "is_attributed"
 FEATURES_COL = "features"
 
@@ -89,7 +91,7 @@ def ip_app_counts(df, logger=None):
 
 
 def ip_app_os_counts(df, logger=None):
-    if logger: logger.info("[function call] ip_app_os_counts(...)")
+    #if logger: logger.info("[function call] ip_app_os_counts(...)")
     clicks_ip_app_os = df.groupBy(["ip", "app", "os"]).count().withColumnRenamed("count", "clicks_ip_app_os")
     return df.join(clicks_ip_app_os, on=["ip", "app", "os"], how="left")
 
@@ -121,12 +123,15 @@ class SparkModel(object):
 
     def create_submit_results(self, model, score=None):
         from util.timeformat import now
+        self.logger_wrapper("[method call] SparkModel(model_str=%s...).create_submit_results(...)" % self.model_str)
         submit_data = spark.read.csv(FilesConfig.Names.submit_data, header=True, inferSchema=True)
         submit_data = create_features(submit_data, self.logger)
         submit_data = vector_assember.transform(submit_data).select([FEATURES_COL, "click_id"])
         results = model.transform(submit_data)
         get_second_col = udf(lambda x: float(x.toArray()[1]))
-        output_res = "folder-" + FilesConfig.Names.submit_output.format(
-            date=now(only_date=False), model=self.model_str, score=score)
+        output_res = FilesConfig.Names.submit_output.format(
+            date=now(only_date=False), model=self.model_str, score=score) + "-folder"
         results.withColumn("is_attributed", get_second_col(results["probability"])).select(
-            ["click_id", "is_attributed"]).write.csv(output_res)
+            ["click_id", "is_attributed"]).write.csv(path=output_res)
+        del results, submit_data
+        collect_submit(output_res, self.logger)
