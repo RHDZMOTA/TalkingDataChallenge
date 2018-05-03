@@ -6,7 +6,6 @@ kiwisolver==1.0.1
 matplotlib==2.2.2
 numpy==1.14.2
 pandas==0.22.0
-pkg-resources==0.0.0
 py4j==0.10.6
 pyparsing==2.2.0
 pyspark==2.3.0
