@@ -12,7 +12,7 @@ warnings.filterwarnings("ignore")
 TRAIN_COLS = ["ip", "app", "device", "os", "channel" , "click_time", "is_attributed"]
 TEST_COLS = ["ip", "app", "device", "os", "channel" , "click_time", "click_id"]
 PREDICTION_COL = "is_attributed"
-TRAIN_LARGE_FILE_PERCENTAGE = 0.05
+TRAIN_LARGE_FILE_PERCENTAGE = 0.15
 
 DTYPES = {
     "ip": "uint32",
