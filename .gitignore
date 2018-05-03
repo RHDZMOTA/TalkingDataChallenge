@@ -172,3 +172,4 @@ test/
 data/
 logs/
 output/
+metastore_db/
