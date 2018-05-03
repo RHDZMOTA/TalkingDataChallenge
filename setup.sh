@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+echo "Creating log folder"
+mkdir logs
 
 echo "Running setup.py..."
 source venv/bin/activate
@@ -6,7 +8,7 @@ python setup.py
 deactivate
 
 echo "Downloading kaggle train dataset..."
-kaggle competitions download -c talkingdata-adtracking-fraud-detection -f train.csv.zip --force
+~/.local/bin/kaggle competitions download -c talkingdata-adtracking-fraud-detection -f train.csv.zip --force
 mv ~/.kaggle/competitions/talkingdata-adtracking-fraud-detection/train.csv.zip data/
 
 echo "Unzip and move train file."
