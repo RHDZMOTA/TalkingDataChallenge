@@ -1,4 +1,4 @@
-from ml.models import XGBoost
+from ml.models import XGBoost, SparkModel
 
 
 def evaluate_model(model_wrapper, config):
@@ -15,5 +15,10 @@ def procedure(data_path, model, config, submit, logger):
         if logger: logger.info("[results] [evaluate] (model=%s, auc=%0.4f)" % (model, test_auc))
         if submit:
             xgboost.create_submit_results(trained_model, test_auc)
-
+    else:
+        spark_model = SparkModel(data_path, model, split=0.5, logger=logger)
+        trained_model, test_auc = evaluate_model(spark_model, config)
+        if logger: logger.info("[results] [evaluate] (model=%s, auc=%0.4f)" % (model, test_auc))
+        if submit:
+            spark_model.create_submit_results(trained_model, test_auc)
 

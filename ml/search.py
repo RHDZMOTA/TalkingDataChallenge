@@ -5,7 +5,7 @@ import pandas as pd
 from util.timeformat import now
 from conf.settings import FilesConfig
 from ml.evaluate import evaluate_model
-from ml.models import XGBoost
+from ml.models import XGBoost, SparkModel
 
 
 def get_config(model):
@@ -28,14 +28,22 @@ def get_config(model):
             'random_state': 99,
             'silent': True
         }
+    if model == "random-forest":
+        return {
+            "numTrees": int(np.random.uniform(5, 200)),
+            "maxDepth": int(np.random.uniform(1, 25))
+        }
 
 
 def procedure(data_path, model, n, submit, logger):
     if logger: logger.info("[function call] ml.models.search.procedure(data_path=%s, model=%s, n=%s, submit=%s)" %
                            (data_path, model, str(n), str(submit)))
     if model == "xgboost":
-        xgboost = XGBoost(data_path, split=0.7, frac=0.8, logger=logger)
+        xgboost = XGBoost(data_path, split=0.7, frac=0.9, logger=logger)
         rand_search(n, model, xgboost, submit, logger)
+    else:
+        spark_model = SparkModel(data_path, model, split=0.5, frac=0.9, logger=logger)
+        rand_search(n, model, spark_model, submit, logger)
 
 
 def rand_search(n, model, model_wrapper, submit, logger):
