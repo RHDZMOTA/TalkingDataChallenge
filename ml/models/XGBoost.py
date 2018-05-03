@@ -3,16 +3,16 @@ import pandas as pd
 import xgboost as xgb
 import warnings
 
+from conf.settings import FilesConfig
+from conf.settings import TRAIN_LARGE_FILE_PERCENTAGE
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import roc_auc_score
-from conf.settings import FilesConfig
 
 warnings.filterwarnings("ignore")
 
 TRAIN_COLS = ["ip", "app", "device", "os", "channel" , "click_time", "is_attributed"]
 TEST_COLS = ["ip", "app", "device", "os", "channel" , "click_time", "click_id"]
 PREDICTION_COL = "is_attributed"
-TRAIN_LARGE_FILE_PERCENTAGE = 0.15
 
 DTYPES = {
     "ip": "uint32",
@@ -57,22 +57,42 @@ def get_submit_data(logger=None):
 def create_features(df, logger=None):
     if logger: logger.info("[function call] create_features(...)")
     df = time_features(df, logger)
-    df = ip_counts(df, logger)
+    df = perform_aggregations(df, logger)
+    gc.collect()
     return df
 
 
 def time_features(df, logger=None):
     if logger: logger.info("[function call] time_features(...)")
     df["day_of_week"] = pd.to_datetime(df["click_time"]).dt.dayofweek
+    df["hour"] = pd.to_datetime(df["click_time"]).dt.hour.astype('uint8')
     return df.drop(["click_time"], axis=1)
+
+
+def perform_aggregations(df, logger=None):
+    df = ip_counts(df, logger)
+    df = ip_app_counts(df, logger)
+    df = ip_app_os_counts(df, logger)
+    return df.drop("ip", axis=1)
 
 
 def ip_counts(df, logger=None):
     if logger: logger.info("[function call] ip_counts(...)")
     ip_count = df.groupby("ip")["channel"].count().reset_index()
     ip_count.columns = ["ip", "clicks_per_ip"]
-    df = pd.merge(df, ip_count, on="ip", how="left", sort=False)
-    return df.drop("ip", axis=1)
+    return pd.merge(df, ip_count, on="ip", how="left", sort=False)
+
+
+def ip_app_counts(df, logger=None):
+    if logger: logger.info("[function call] ip_app_counts(...)")
+    ip_app_count = df[["ip", "app", "channel"]].groupby(["ip", "app"])["channel"].count().reset_index()
+    return pd.merge(df, ip_app_count.rename(columns={"channel": "clicks_per_ip_app"}), on=["ip", "app"], how="left")
+
+
+def ip_app_os_counts(df, logger=None):
+    if logger: logger.info("[function call] ip_app_os_counts(...)")
+    ip_app_os_count = df[["ip", "app", "os", "channel"]].groupby(["ip", "app", "os"])["channel"].count().reset_index()
+    return pd.merge(df, ip_app_os_count.rename(columns={"channel": "clicks_per_ip_app_os"}), on=["ip", "app", "os"], how="left")
 
 
 def read_large_file(data_path, logger=None):

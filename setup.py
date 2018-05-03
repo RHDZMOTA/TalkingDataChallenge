@@ -18,7 +18,6 @@ def download_raw_data():
 
 def create_dirs():
     create_dir(FilesConfig.Paths.data)
-    create_dir(FilesConfig.Paths.logs)
     create_dir(FilesConfig.Paths.output)
     create_dir(FilesConfig.Paths.submit)
     create_dir(FilesConfig.Paths.train)

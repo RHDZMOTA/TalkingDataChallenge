@@ -10,15 +10,24 @@ This is my participation in the Kaggle Competition: [TalkingData AdTracking Frau
 
 ## First-time setup
 
+Previous requirements:
+1. Install `unzip` with: `sudo apt install unzip`
+1. Install the official [kaggle command line interface](https://github.com/Kaggle/kaggle-api).
+1. Install spark and configure pyspark (python 3 as pyspark-driver) with this in your rc-file: 
+    * `export PYSPARK_PYTHON=python3`
+    * `export PYSPARK_DRIVER_PYTHON=python3`
+1. Create an alias for spark submit in your rc-file:
+    * `alias spark-submit=path/to/spark/bin/spark-submit`
+
 To run this repo, follow these steps:
 
 1. Clone into your machine.
-2. Create the environmental variables: `cp conf/.env.example conf/.env`
-3. Create a virtual environment:
+1. Create the environmental variables: `cp conf/.env.example conf/.env`
+1. Create a virtual environment:
     * `virtualenv --python=python3 venv`
     * `source venv/bin/activate`
-4. Install requirements: `pip install -r requirements.txt`
-5. Run the setup script: `bash setup.sh`
+1. Install requirements: `pip install -r requirements.txt`
+1. Run the setup script: `bash setup.sh`
 
 ## Usage
 
@@ -29,29 +38,39 @@ run a particular configuration.
 
 To random search a model use the following command:
 ```bash
-python main.py --model {name} --iter {n}
+spark-submit main.py --model {name} --iter {n} {--submit}
 ```
 
 Where:
 ```bash
     name : machine learning model name {xgboost, random-forest}
     n    : the number of random combination to search from e.g. 100
+    --submit : add this flag to generate submit results (csv) for kaggle using the best model. 
+```
+
+Example:
+```
+spark-submit main.py --model xgboost --iter 25 --submit
 ```
 
 ### Model Evaluation
 
 To evaluate a particular model use the following command:
 ```bash
-python main.py --model {name} --config {file.json}
+spark-submit main.py --model {name} --config {file.json} {--submit}
 ```
 
 Where:
 ```bash
     name      : machine learning model name {xgboost, random-forest}
     file.json : A json file containing the parameters of the model. 
+    --submit  : add this flag to generate submit results (csv) for kaggle.
 ```
 
-
+Example:
+```
+spark-submit main.py --model xgboost --config examples/xgboost_config.json --submit
+```
 ### Model config 
 
 To run a standalone model you need to provide a configuration file. 

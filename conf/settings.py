@@ -19,6 +19,7 @@ TRAIN_CSV = os.environ.get("TRAIN_CSV")
 TRAIN_SAMPLE_CSV = os.environ.get("TRAIN_SAMPLE_CSV")
 TEST_CSV = os.environ.get("TEST_CSV")
 LOG_FOLDER = os.environ.get("LOG_FOLDER")
+TRAIN_LARGE_FILE_PERCENTAGE = float(os.environ.get("TRAIN_LARGE_FILE_PERCENTAGE"))
 
 PROJECT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 DATA_PATH = os.path.join(PROJECT_DIR, DATA_FOLDER)
