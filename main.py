@@ -9,7 +9,6 @@ from ml.search import procedure as random_procedure
 
 RANDOM_SEARCH = "random-search"
 MODEL_EVALUATION = "model-eval"
-DATA = FilesConfig.Names.train_data
 
 
 def check_options(opts):
@@ -65,13 +64,16 @@ def random_search(model, n, submit):
 if __name__ == "__main__":
     parser = OptionParser()
     parser.add_option("--submit", action="store_true", help="Create submission files.")
+    parser.add_option("--sample", action="store_true", help="Use sample train dataset.")
     parser.add_option("--model", type="string", help="ML Model")
     parser.add_option("--iter", type="string", help="Number of iterations (config option must not be provided.")
     parser.add_option("--config", type="string", help="Configuration file for model (iter option must not be provided).")
     kwargs, _ = parser.parse_args(args=None, values=None)
-
     logger = LogConf.create(logging)
+
     check_options(kwargs)
     action, param = determine_action(kwargs)
+    DATA = FilesConfig.Names.train_sample_data if getattr(kwargs, "sample") else FilesConfig.Names.train_data
+
     main(getattr(kwargs, "model"), param, action, getattr(kwargs, "submit"))
 
