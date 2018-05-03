@@ -121,8 +121,9 @@ class SparkModel(object):
 
     def create_submit_results(self, model, score=None):
         from util.timeformat import now
-        submit_data = spark.read.csv(FilesConfig.Names.submit_data)
+        submit_data = spark.read.csv(FilesConfig.Names.submit_data, header=True, inferSchema=True)
         submit_data = create_features(submit_data, self.logger)
+        submit_data = vector_assember.transform(submit_data).select([FEATURES_COL, "click_id"])
         results = model.transform(submit_data)
         get_second_col = udf(lambda x: float(x.toArray()[1]))
         output_res = "folder-" + FilesConfig.Names.submit_output.format(
