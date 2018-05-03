@@ -38,14 +38,15 @@ run a particular configuration.
 
 To random search a model use the following command:
 ```bash
-spark-submit main.py --model {name} --iter {n} {--submit}
+spark-submit main.py --model {name} --iter {n} {--submit} {--sample}
 ```
 
 Where:
 ```bash
     name : machine learning model name {xgboost, random-forest}
     n    : the number of random combination to search from e.g. 100
-    --submit : add this flag to generate submit results (csv) for kaggle using the best model. 
+    --submit : add this flag to generate submit results (csv) for kaggle using the best model.
+    --sample : add this flag to use the train_sample.csv instead of the train.csv. 
 ```
 
 Example:
@@ -64,12 +65,13 @@ Where:
 ```bash
     name      : machine learning model name {xgboost, random-forest}
     file.json : A json file containing the parameters of the model. 
-    --submit  : add this flag to generate submit results (csv) for kaggle.
+    --submit  : add this flag to generate submit results (csv) for kaggle. 
+    --sample  : add this flag to use the train_sample.csv instead of the train.csv. 
 ```
 
 Example:
 ```
-spark-submit main.py --model xgboost --config examples/xgboost_config.json --submit
+spark-submit main.py --model random-forest --config examples/rf_config.json --submit --sample
 ```
 ### Model config 
 
