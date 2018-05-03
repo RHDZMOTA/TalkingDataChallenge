@@ -18,21 +18,21 @@ def main(model, param, action, submit):
 
 
 def evaluate_model(model, config_file, submit):
-    logger.info("[function call] evaluate_model(model=%s, config_file=%s, submit=%s)" %
+    if logger: logger.info("[function call] evaluate_model(model=%s, config_file=%s, submit=%s)" %
                 (model, config_file, str(submit)))
     config = json.loads(open(config_file, "r").read())
     eval_procedure(DATA, model, config, submit, logger)
 
 
 def random_search(model, n, submit):
-    logger.info("[function call] random_search(model=%s, n=%s, submit=%s)" % (model, str(n), str(submit)))
+    if logger: logger.info("[function call] random_search(model=%s, n=%s, submit=%s)" % (model, str(n), str(submit)))
     random_procedure(DATA, model, n, submit, logger)
 
 
 if __name__ == "__main__":
-    logger = LogConf.create(logging)
-    cli = CLI(logger)
+    cli = CLI()
     action, param = cli.determine_action()
+    logger = LogConf.create(logging) if cli.get("logging") else None
     DATA = FilesConfig.Names.train_sample_data if cli.get("sample") else FilesConfig.Names.train_data
     main(cli.get("model"), param, action, cli.get("submit"))
 

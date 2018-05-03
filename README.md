@@ -38,7 +38,7 @@ run a particular configuration.
 
 To random search a model use the following command:
 ```bash
-spark-submit main.py --model {name} --iter {n} {--submit} {--sample}
+spark-submit main.py --model {name} --iter {n} {--submit} {--sample} {--logging}
 ```
 
 Where:
@@ -46,19 +46,20 @@ Where:
     name : machine learning model name {xgboost, random-forest}
     n    : the number of random combination to search from e.g. 100
     --submit : add this flag to generate submit results (csv) for kaggle using the best model.
-    --sample : add this flag to use the train_sample.csv instead of the train.csv. 
+    --sample : add this flag to use the train_sample.csv instead of the train.csv.
+    --logging: add this flag to log the program execution.  
 ```
 
 Example:
 ```
-spark-submit main.py --model xgboost --iter 25 --submit
+spark-submit main.py --model xgboost --iter 25 --submit --logging
 ```
 
 ### Model Evaluation
 
 To evaluate a particular model use the following command:
 ```bash
-spark-submit main.py --model {name} --config {file.json} {--submit}
+spark-submit main.py --model {name} --config {file.json} {--submit} {--logging}
 ```
 
 Where:
@@ -67,6 +68,7 @@ Where:
     file.json : A json file containing the parameters of the model. 
     --submit  : add this flag to generate submit results (csv) for kaggle. 
     --sample  : add this flag to use the train_sample.csv instead of the train.csv. 
+    --logging : add this flag to log the program execution.  
 ```
 
 Example:
@@ -103,4 +105,10 @@ This is an example configuration for the xgboost model:
 
 #### Random Forest Config
 
-[to be defined]
+This is an example configuration for the random-forest model:
+```
+{
+  "numTrees": 120,
+  "maxDepth": 10
+}
+```
