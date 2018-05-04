@@ -91,7 +91,7 @@ def ip_app_counts(df, logger=None):
 
 
 def ip_app_os_counts(df, logger=None):
-    #if logger: logger.info("[function call] ip_app_os_counts(...)")
+    if logger: logger.info("[function call] ip_app_os_counts(...)")
     clicks_ip_app_os = df.groupBy(["ip", "app", "os"]).count().withColumnRenamed("count", "clicks_ip_app_os")
     return df.join(clicks_ip_app_os, on=["ip", "app", "os"], how="left")
 
