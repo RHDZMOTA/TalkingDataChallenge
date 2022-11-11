@@ -8,7 +8,7 @@ numpy==1.14.2
 pandas==0.22.0
 py4j==0.10.6
 pyparsing==2.2.0
-pyspark==2.3.0
+pyspark==3.2.2
 python-dateutil==2.7.2
 python-dotenv==0.8.2
 pytz==2018.4
